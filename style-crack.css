@@ -1,0 +1,176 @@
+/* ============================================================
+ *  勇者奶蛙传 · 破解版 —— 增量样式
+ *
+ *  放在游戏样式之后加载，只做三件事：
+ *    1. 右上角水印「hacked by 猫祐今天吃盒蛋」
+ *    2. 竖屏提示（只在竖屏出现，横屏玩游戏时完全不存在）
+ *    3. 跨平台（iOS / 鸿蒙 / Android / Windows）的触控与大屏修正
+ *
+ *  刻意不碰游戏自己的选择器 —— 除了盖住顶层 z-index，
+ *  万一有回归，问题范围一眼可界定。
+ * ============================================================ */
+
+/* ------------------------------------------------------------
+ *  1. 水印
+ *
+ *  钉在右上角。游戏自己的 HUD 是 DOM 元素，层级未知，
+ *  所以用极大 z-index + 独立层，保证永远在最上面；
+ *  pointer-events:none 保证绝不抢点击（右下角是技能按钮区，
+ *  右上角是 Boss 血条 —— 都不许被挡）。
+ * ---------------------------------------------------------- */
+
+.crack-wm {
+  position: fixed;
+  top: calc(6px + env(safe-area-inset-top, 0px));
+  right: calc(10px + env(safe-area-inset-right, 0px));
+  z-index: 2147483000;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px 5px;
+
+  font-family: "HarmonyOS Sans SC", "HarmonyOS Sans", "PingFang SC",
+               "Microsoft YaHei", system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: .01em;
+  white-space: nowrap;
+
+  color: #fff;
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgba(255, 122, 89, .96), rgba(232, 52, 47, .96) 68%);
+  box-shadow: 0 3px 14px rgba(180, 30, 20, .45), inset 0 1px 0 rgba(255, 255, 255, .38);
+
+  pointer-events: none;          /* 绝不挡操作 */
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.crack-wm-tag {
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: .16em;
+  color: rgba(255, 236, 210, .95);
+}
+
+.crack-wm-name {
+  text-shadow: 0 1px 2px rgba(120, 20, 10, .5);
+}
+
+/* 小屏（手机横屏高度很矮时）压一档，避免和 Boss 血条挤在一起 */
+@media (max-height: 430px) {
+  .crack-wm {
+    font-size: 11px;
+    padding: 3px 8px 4px;
+    gap: 4px;
+  }
+  .crack-wm-tag { font-size: 8px; }
+}
+
+/* ------------------------------------------------------------
+ *  2. 竖屏提示
+ *
+ *  这是横屏游戏，竖屏时画面会被压得很小。
+ *  默认**完全不显示**，只有 (orientation: portrait) 才出现。
+ *  横屏玩游戏时这个元素不参与渲染、不占层级、不抢事件。
+ * ---------------------------------------------------------- */
+
+.crack-rotate { display: none; }
+
+@media (orientation: portrait) {
+  .crack-rotate {
+    position: fixed;
+    inset: 0;
+    z-index: 2147483647;          /* 盖住包括水印在内的一切 */
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-family: "HarmonyOS Sans SC", "HarmonyOS Sans", "PingFang SC",
+                 "Microsoft YaHei", system-ui, -apple-system, "Segoe UI", sans-serif;
+    color: #fff;
+    background: radial-gradient(120% 90% at 50% 0%, #2a2340 0%, #171321 60%, #0d0b14 100%);
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  .crack-rotate-inner { text-align: center; padding: 24px; }
+
+  .crack-rotate-icon {
+    font-size: 54px;
+    line-height: 1;
+    margin-bottom: 14px;
+    animation: rotateHint 2.4s ease-in-out infinite;
+  }
+
+  .crack-rotate-inner p {
+    margin: 0 0 8px;
+    font-size: 19px;
+    font-weight: 800;
+    letter-spacing: .02em;
+  }
+
+  .crack-rotate-inner p strong { color: #ffd47a; }
+
+  .crack-rotate-inner span {
+    font-size: 13px;
+    color: rgba(255, 255, 255, .55);
+  }
+
+  @keyframes rotateHint {
+    0%, 45%   { transform: rotate(0deg); }
+    60%, 100% { transform: rotate(90deg); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .crack-rotate-icon { animation: none; transform: rotate(90deg); }
+  }
+}
+
+/* ------------------------------------------------------------
+ *  3. 跨平台修正
+ * ---------------------------------------------------------- */
+
+html, body {
+  /* 游戏是深色底，滚动条露白边很突兀 */
+  background-color: #171321;
+  overscroll-behavior: none;     /* 禁掉下拉刷新 / 橡皮筋 */
+}
+
+body {
+  -webkit-tap-highlight-color: transparent;   /* 鸿蒙/Android 的点按高亮块 */
+  -webkit-touch-callout: none;                /* iOS 长按菜单 */
+  text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;             /* iOS 横竖屏切换不放大字号 */
+}
+
+/* 游戏内的按钮/摇杆：统一触摸行为，减少误触与延迟 */
+#app button,
+#app [role="button"],
+#app canvas {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* 键盘用户：给可见焦点环（原版多半是 outline:none） */
+#app button:focus-visible,
+#app [role="button"]:focus-visible {
+  outline: 3px solid rgba(255, 200, 90, .75);
+  outline-offset: 2px;
+}
+
+/* Windows 高对比度主题下，别让按钮完全失去边界 */
+@media (forced-colors: active) {
+  .crack-wm { border: 1px solid ButtonText; }
+}
+
+/* 极窄横屏（如 480×320 的旧安卓）：水印再收一档，只留名字 */
+@media (orientation: landscape) and (max-width: 640px) {
+  .crack-wm-tag { display: none; }
+  .crack-wm { font-size: 10px; padding: 3px 7px; }
+}

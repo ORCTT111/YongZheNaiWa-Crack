@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no" />
+<meta name="theme-color" content="#171321" />
+<meta name="color-scheme" content="dark" />
+
+<!-- 横屏锁定：原版靠这两个 meta 在国产内核 / 微信 / QQ 浏览器里生效 -->
+<meta name="screen-orientation" content="landscape" />
+<meta name="x5-orientation" content="landscape" />
+<meta name="x5-fullscreen" content="true" />
+<meta name="browsermode" content="application" />
+<meta name="x5-page-mode" content="app" />
+
+<!-- iOS / Android：添加到主屏幕后全屏、隐藏地址栏 -->
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="奶蛙破解版" />
+<meta name="application-name" content="奶蛙破解版" />
+<meta name="format-detection" content="telephone=no, email=no, address=no" />
+
+<link rel="manifest" href="./manifest.json" />
+<meta name="description" content="勇者奶蛙传 · 破解版：角色血量无限、伤害全级别增幅 100%。横版动作过关，七章救公主。" />
+<meta property="og:title" content="勇者奶蛙传 · 破解版" />
+<meta property="og:description" content="血量无限 + 伤害 +100%，一口气笑翻魔王。" />
+<title>勇者奶蛙传 · 破解版</title>
+
+<link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+<link rel="icon" href="./assets/icons/icon-192.png" sizes="192x192" type="image/png" />
+<link rel="apple-touch-icon" href="./assets/icons/apple-touch-icon.png" />
+
+<link rel="stylesheet" crossorigin href="./assets/game-DhG0Y0Ys.css" />
+<!-- 破解版增量样式：必须排在游戏样式之后才能盖住 HUD -->
+<link rel="stylesheet" href="./style-crack.css" />
+<!-- 游戏入口在 assets/ 下（和原站一致，这样它内部 import "./main-*.js" 才解析对）。
+     顺序很重要：先 import 游戏，再 import 壳脚本，
+     保证 Phaser 只实例化一次，而壳脚本能安全地补全屏/方向锁。 -->
+<script type="module">
+  import './assets/game-BDvRcsxG.js';
+  import './boot-crack.js';
+</script>
+</head>
+<body>
+<main id="app"></main>
+
+<!-- 破解版水印：固定右上角，pointer-events 关掉，绝不挡操作 -->
+<div class="crack-wm" aria-hidden="true">
+  <span class="crack-wm-tag">HACKED</span>
+  <span class="crack-wm-name">by 猫祐今天吃盒蛋</span>
+</div>
+
+<!-- 竖屏提示：只有竖屏时才显示（CSS 控制），横屏玩游戏时完全不出现 -->
+<div class="crack-rotate" aria-hidden="true">
+  <div class="crack-rotate-inner">
+    <div class="crack-rotate-icon">📱</div>
+    <p>请把手机<strong>横过来</strong>玩</p>
+    <span>这是横屏动作游戏</span>
+  </div>
+</div>
+</body>
+</html>

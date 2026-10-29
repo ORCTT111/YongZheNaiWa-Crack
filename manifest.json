@@ -1,0 +1,23 @@
+{
+  "id": "naiwa-crack-v1",
+  "name": "勇者奶蛙传 · 破解版",
+  "short_name": "奶蛙破解版",
+  "description": "角色血量无限、伤害全级别增幅 100% 的横版动作过关游戏。",
+  "lang": "zh-CN",
+  "dir": "ltr",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "fullscreen",
+  "display_override": ["fullscreen", "standalone", "minimal-ui", "browser"],
+  "orientation": "landscape",
+  "theme_color": "#171321",
+  "background_color": "#171321",
+  "categories": ["games", "entertainment"],
+  "prefer_related_applications": false,
+  "icons": [
+    { "src": "assets/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "assets/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "assets/icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" },
+    { "src": "assets/icons/apple-touch-icon.png", "sizes": "180x180", "type": "image/png", "purpose": "any" }
+  ]
+}
